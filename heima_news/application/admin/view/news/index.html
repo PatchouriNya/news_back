@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新闻列表</title>
+</head>
+<style>
+    body{
+        font-size: 14px;
+
+    }
+    .nav{
+        text-align: right;
+        padding-right: 20px;
+    }
+    table{
+        width: 1000px;
+        margin:0 auto;
+        text-align: center;
+    }
+    a{
+        text-decoration: none;
+        color: blue;
+        cursor: pointer;
+    }
+</style>
+<body>
+<div class="nav">
+    <a href="{:url('create')}">添加新闻</a>
+    <a onclick="delall('{:url('delall')}')">删除全部</a>
+</div>
+<hr>
+<div>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>标题</th>
+            <th>作者</th>
+            <th>操作</th>
+        </tr>
+        {volist name="data" id="vol"}
+        <tr>
+            <td>{$vol.id}</td>
+            <td>{$vol.title}</td>
+            <td>{$vol.author}</td>
+            <td>
+                <a href="{:url('edit',['id'=>$vol.id])}">修改</a>
+                    <a onclick="del('{:url('del',['id'=>$vol.id])}',this)">删除</a>
+            </td>
+        </tr>
+        {/volist}
+    </table>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.5.0/jquery.min.js"></script>
+<script>
+    function del(url,obj) {
+        // console.log(obj);
+        var bool = confirm('真删？');
+        if (bool){
+            // ajax实现删除
+            $.get(url,function (ret) {
+                if(ret.status == 0){
+                    $(obj).parents('tr').remove();
+                    alert(ret.msg);
+                }
+            },'json');
+        }
+    }
+
+    function delall(url) {
+        var bool = confirm('真删？');
+        if(bool){
+            // $.get(url,function (data) {
+            //     console.log(data);
+            // },'json');
+            $(window).attr('location',url);
+        }
+    }
+</script>
+</body>
+</html>
